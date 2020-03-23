@@ -5,38 +5,54 @@ import './header.css';
 
 interface stateComponent {
     position: string;
+    lng: number;
+    lat: number;
 }
-class HeaderComponent extends Component<any, stateComponent> {
+
+
+interface stateProps {
+    updateEvent: (e: any) => void;
+}
+
+class HeaderComponent extends Component<stateProps, stateComponent> {
     state = {
-        position: ''
+        position: '',
+        lng: 5,
+        lat: 34,
     };
 
     componentDidMount() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 console.log(position);
-                const url = `http://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&sensor=false`
-                fetch(url)
-                    .then(
-                        (data: RequestInit) => {
-                            console.log(data);
-                        }
-                    )
+                //const url = `http://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&sensor=false`
+
                 var img = new Image();
                 img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + position.coords.latitude + "," + position.coords.longitude + "&zoom=13&size=800x400&sensor=false";
                 this.setState({
-                    position: `${position.coords.latitude},${position.coords.longitude}`
-
-                })
+                    position: `${position.coords.latitude},${position.coords.longitude}`,
+                    lng: position.coords.longitude,
+                    lat: position.coords.latitude,
+                });
+                const data = {
+                    lng: position.coords.longitude,
+                    lat: position.coords.latitude,
+                    zoom: 13
+                }
+                this.updateEvent(data);
             });
 
         }
     }
 
+    updateEvent = (data: any) => {
+        this.props.updateEvent(data);
+    }
+
     render() {
         return (
             <Fragment>
-                <Row style={{ padding: '10px' }}>
+                <Row style={{ padding: '10px' }} className='warning-color'>
                     <Col sm={12}>
                         <div className="header-posicion">
                             <span>
@@ -49,9 +65,21 @@ class HeaderComponent extends Component<any, stateComponent> {
                         <p className="header-info" >Ultimo reporte hace 10min</p>
                     </Col>
                 </Row>
-                <Row style={{ padding: '10px' }}>
-                    <Col sm={1}  xs={3} span={3}>
-                        <Button type="primary" icon={<MenuOutlined />} />
+                <Row style={{
+                    padding: '10px',
+                    borderBottomRightRadius: '10px',
+                    borderBottomLeftRadius: '10px'
+                }} className='warning-color'>
+                    <Col sm={1} xs={3} span={3}>
+                        <Button
+                            type='default'
+                            icon={<MenuOutlined />}
+                            className='warning-color' 
+                            style={{
+                                borderColor:'transparent',
+                                boxShadow:'0px 0px 0px rgba(0, 0, 0, 0)'
+                            }}
+                            />
                     </Col>
                     <Col sm={12}>
                         <Input placeholder="Enecuentra lo que necesitas"></Input>
