@@ -8,7 +8,7 @@ class Config:
         self.mysqldb_password = os.getenv("MYSQLDB_PASSWORD")
         self.mysqldb_name = os.getenv("MYSQLDB_NAME")
         self.mysqldb_port = os.getenv("MYSQLDB_PORT")
-        self.django_secretkey = os.getenv("SECREY_KEY")
+        self.django_secretkey = os.getenv("SECRET_KEY")
         self.enviroment = os.getenv("ENV")
 
     

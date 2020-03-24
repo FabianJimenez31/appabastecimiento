@@ -3,14 +3,20 @@ from django.db import models
 class product(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+    def __str__(self):
+        return self.name
 
 class store(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
-    models.ManyToManyField(product, through='store_product')
+    products = models.ManyToManyField(product, through='store_product')
+    def __str__(self):
+        return self.name
 
 class store_status(models.Model):
     name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
 
 class store_report(models.Model):
     store = models.ForeignKey(store, on_delete=models.CASCADE)
@@ -21,6 +27,7 @@ class store_report(models.Model):
 class store_product(models.Model):
     store = models.ForeignKey(store, on_delete=models.CASCADE)
     product = models.ForeignKey(product, on_delete=models.CASCADE)
+    amount = models.IntegerField()
 
 
 class product_report(models.Model):

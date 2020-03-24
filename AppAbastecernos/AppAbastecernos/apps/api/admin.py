@@ -1,7 +1,7 @@
 from django.contrib.admin import AdminSite
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy
-from .models import store, product, store_status, product_report, store_report
+from .models import store, product, store_status, product_report, store_report, store_product
 # Register your models here.
 
 class adm(AdminSite):
@@ -17,3 +17,4 @@ adm.register(store)
 adm.register(product)
 adm.register(product_report)
 adm.register(store_report)
+adm.register(store_product)
