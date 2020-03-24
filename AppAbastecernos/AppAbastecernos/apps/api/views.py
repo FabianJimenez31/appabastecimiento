@@ -58,9 +58,9 @@ def calculateJam(sto):
     if c == 0:
         return 0
     if c == 1:
-        return int(summ*(3/5))
+        return int(summ*(5/3))
     if c == 2:
-        return int(summ*(6/5))
+        return int(summ*(5/6))
     else:
-        return int(summ*(9/5))
+        return int(summ*(5/9))
 
