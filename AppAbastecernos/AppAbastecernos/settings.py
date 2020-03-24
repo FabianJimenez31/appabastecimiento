@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from AppAbastecernos.config.config import Config
 
+config = Config()
+data_database_mysql = config.get_connectiondb()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'm+*#_wt_!15j3ski@*@zogonhhzz)#6s9^c_8a5v8w^b_sce6='
+SECRET_KEY = config.get_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,10 +80,11 @@ WSGI_APPLICATION = 'AppAbastecernos.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'appabastecernos',
-        'USER':'root',
-        'HOST':'localhost',
-        'PORT':'3306',
+        'NAME': data_database_mysql['name'],
+        'USER':data_database_mysql['username'],
+        'PASSWORD':data_database_mysql['password'],
+        'HOST':data_database_mysql['host'],
+        'PORT':data_database_mysql['port'],
     }
 }
 
