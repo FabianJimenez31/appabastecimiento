@@ -13,7 +13,10 @@ def store(request):
             stores = models.store.objects.all()
             response = {'stores':[]}
             for sto in stores:
-                obj = {'id':sto.id,'name':sto.name,'location':{'latitude':sto.latitude,'longitude':sto.longitude},'products':[], 'reports':[]}
+
+                state = calculateJam(sto)
+
+                obj = {'id':sto.id,'address':sto.address,'name':sto.name,'state':state,'location':{'latitude':sto.latitude,'longitude':sto.longitude},'products':[], 'reports':[]}
 
 
                 #Aquí conseguimos los productos
@@ -29,12 +32,35 @@ def store(request):
         
         else:
             sto = models.store.objects.get(pk=store)
-            obj = {'id':sto.id,'name':sto.name,'location':{'latitude':sto.latitude,'longitude':sto.longitude},'products':[]}
+
+            state = calculateJam(sto)
+            obj = {'id':sto.id,'address':sto.address,'name':sto.name,'state':state,'location':{'latitude':sto.latitude,'longitude':sto.longitude},'products':[], 'reports':[]}
+
             for pro in sto.products.all():
                 obj['products'].append({'product':pro.name,'ammount':models.store_product.objects.get(store=sto, product=pro).amount})
+
+            for rep in models.store_report.objects.filter(store=sto):
+                    obj['reports'].append({'status':rep.store_status.name, 'time':rep.time, 'photo':rep.photo})
             return JsonResponse(obj)
 
     if request.method == 'POST':
         print(request.body)
         return JsonResponse({'message':'agregado', 'elque':str(request.body)})
+
+def calculateJam(sto):
+    state = models.store_report.objects.filter(store=sto).order_by('time')[:3]
+    summ = 0
+    c = 0
+    for st in state:
+        summ += int(st.id)
+        c += 1
+
+    if c == 0:
+        return 0
+    if c == 1:
+        return int(summ*(3/5))
+    if c == 2:
+        return int(summ*(6/5))
+    else:
+        return int(summ*(9/5))
 
