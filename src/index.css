@@ -6,6 +6,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: white !important;
 }
 
 code {
@@ -17,6 +18,6 @@ p{
 }
 
 .warning-color{
-  background-color: #f7bf07 !important;
+  background-color: #F8B500 !important;
   color:white;
 }
