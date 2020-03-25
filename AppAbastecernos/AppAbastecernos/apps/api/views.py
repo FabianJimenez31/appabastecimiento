@@ -53,11 +53,11 @@ def store(request):
         return JsonResponse({'message':'agregado', 'elque':str(request.body)})
 
 def calculateJam(sto):
-    state = models.store_report.objects.filter(store=sto).order_by('time')[:3]
+    state = models.store_report.objects.all().filter(store=sto).order_by('-time')[:3]
     summ = 0
     c = 0
     for st in state:
-        summ += int(st.id)
+        summ += int(st.store_status.id)
         c += 1
 
     if c == 0:
