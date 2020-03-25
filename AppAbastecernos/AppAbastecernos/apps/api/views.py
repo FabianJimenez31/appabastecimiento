@@ -1,10 +1,17 @@
-from django.http import JsonResponse
+from django.http import (
+        Http404,
+        JsonResponse,
+        HttpResponse
+    )
 from . import models
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import JSONParser
-from .serializers import StoreSerializer
+from .serializers import (
+    StoreSerializer,
+    StoreStatusSerializer
+        )
 from AppAbastecernos.util.load_stores import LoadStore
 from AppAbastecernos.config.config import Config
 config = Config()
@@ -112,6 +119,137 @@ class productList(APIView):
             product.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class StoreStatusList(APIView):
+
+    parser_classes = (JSONParser,)
+
+    def get(self,request,format=None):
+        stores_status = models.store_status.objects.all()
+        serializer = StoreStatusSerializer(stores_status, many=True)
+        return Response(serializer.data)
+
+class StoreReportList(APIView):
+    parser_classes = (JSONParser,)
+
+    def get_object(self,pk):
+        try:
+            return models.store.objects.get(pk=pk)
+        except models.store.DoesNotExist:
+            raise Http404
+
+    def post(self,request,format=None):
+        store_id = None
+        store_status_id = None
+        time = None
+        photo = None
+        try:
+            store_id = request.data['store_id']
+            store_status_id = request.data['status_id']
+            time = request.data['time']
+
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if 'photo' in request.data:
+            photo = request.data['photo']
+        else:
+            photo = ''
+        store_object = None
+        status_object = None
+
+        try:
+            store_object = self.get_object(store_id)
+            status_object = models.store_status.objects.get(pk=store_status_id)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        store_report_object = models.store_report(
+                    store=store_object,
+                    store_status=status_object,
+                    time=time,
+                    photo=photo
+                    )
+        store_report_object.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class ProductReportList(APIView):
+    parser_classes = (JSONParser,)
+
+    def post(self, request, format=None):
+        product_id = None
+        before = None
+        after = None
+        time = None
+        try:
+            product_id = request.data['product_id']
+            before = request.data['before']
+            after = request.data['after']
+            time = request.data['time']
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        product_object = None
+        try:
+
+            product_object = models.product.objects.get(pk=product_id)
+        except models.product.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        product_report_object = models.product_report(
+            product=product_object,
+            before=before,
+            after=after,
+            time=time
+        )
+
+        product_report_object.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class StoreProductList(APIView):
+    parser_classes = (JSONParser,)
+
+    def post(self, request, format=None):
+        store_id = None
+        product_id = None
+        amount = None
+
+        try:
+            store_id = request.data['store_id']
+            product_id = request.data['product_id']
+            amount = request.data['amount']
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        store_object = None
+        product_object = None
+
+        try:
+            store_object = models.store.objects.get(pk=store_id)
+            product_object = models.product.objects.get(pk=product_id)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        store_product_object = models.store_product(
+            store=store_object,
+            product=product_object,
+            amount=amount
+            )
+        return Response(status=status.HTTP_201_CREATED)
+
+
+
+
+
+
+
+        
+
+
 
 
 
