@@ -1,8 +1,11 @@
 from django.db import models
+from datetime import datetime
+from django.utils import timezone
 
 class product(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+    icon = models.CharField(max_length=200, default='')
     def __str__(self):
         return self.name
 
@@ -23,8 +26,9 @@ class store_status(models.Model):
 class store_report(models.Model):
     store = models.ForeignKey(store, on_delete=models.CASCADE)
     store_status = models.ForeignKey(store_status, on_delete=models.CASCADE)
-    time = models.IntegerField()
+    time = models.DateTimeField(default=timezone.now)
     photo = models.CharField(max_length=200, blank=True, default='')
+    ip = models.CharField(max_length=20)
 
 class store_product(models.Model):
     store = models.ForeignKey(store, on_delete=models.CASCADE)
@@ -36,5 +40,5 @@ class product_report(models.Model):
     product = models.ForeignKey(store_product, on_delete=models.CASCADE)
     before = models.IntegerField()
     after = models.IntegerField()
-    time = models.IntegerField()
-
+    time = models.DateTimeField(default=timezone.now)
+    ip = models.CharField(max_length=20)
