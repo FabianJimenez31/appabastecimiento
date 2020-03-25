@@ -1,5 +1,10 @@
 from django.http import JsonResponse
 from . import models
+from AppAbastecernos.util.load_stores import LoadStore
+from AppAbastecernos.config.config import Config
+config = Config()
+
+LoadInformation = config.get_migration_stores()
 
 def get(request):
     return JsonResponse({'message':'Hola'})
@@ -64,3 +69,13 @@ def calculateJam(sto):
     else:
         return int(summ*(5/9))
 
+
+
+
+
+
+def migration_stores(request): 
+    if LoadInformation:
+        load_store = LoadStore()
+        load_store.load_stores_api()
+    return JsonResponse({'message':'Hola'})

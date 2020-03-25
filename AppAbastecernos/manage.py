@@ -7,11 +7,17 @@ from pathlib import Path
 
 
 
+
 def main():
     env_path = Path('.') / 'AppAbastecernos' /'.env'
     load_dotenv(dotenv_path=env_path)
+
+   
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AppAbastecernos.settings')
     try:
+        
+
         from django.core.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
@@ -19,7 +25,10 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    
+
     execute_from_command_line(sys.argv)
+   
 
 
 if __name__ == '__main__':

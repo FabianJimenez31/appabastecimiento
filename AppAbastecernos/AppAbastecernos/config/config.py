@@ -10,6 +10,8 @@ class Config:
         self.mysqldb_port = os.getenv("MYSQLDB_PORT")
         self.django_secretkey = os.getenv("SECRET_KEY")
         self.enviroment = os.getenv("ENV")
+        self.api_komercia = os.getenv("API_KOMERCIA")
+        self.migration_stores = os.getenv("MIGRATION_STORES")
 
     
     def get_connectiondb(self):
@@ -23,3 +25,10 @@ class Config:
 
     def get_secret_key(self):
         return self.django_secretkey
+    
+    def get_api_komercia(self):
+        return self.api_komercia
+    
+    def get_migration_stores(self):
+        return self.migration_stores
+        
