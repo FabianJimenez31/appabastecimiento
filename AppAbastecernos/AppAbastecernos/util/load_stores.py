@@ -13,8 +13,8 @@ class LoadStore:
 
         for stores in store_exits:
             if(
-                stores.latitude==dict_store['latitud'] 
-                and stores.longitude==dict_store['longitud']):
+                stores.latitude==dict_store['latitude'] 
+                and stores.longitude==dict_store['longitude']):
                 return False
         return True
 
@@ -48,10 +48,10 @@ class LoadStore:
                     sedes_store = data_store['sedes']
                     for sede_store in sedes_store:
                         if(
-                            validation_keys(sede_store['nombre_sede'])
-                            and validation_keys(sede_store['latitud'])
-                            and validation_keys(sede_store['longitud'])
-                            and validation_keys(sede_store['direccion'])
+                            self.validation_keys(sede_store['nombre_sede'])
+                            and self.validation_keys(sede_store['latitud'])
+                            and self.validation_keys(sede_store['longitud'])
+                            and self.validation_keys(sede_store['direccion'])
                             ):
                             sede_store = { 
                             "name":sede_store['nombre_sede'],
@@ -62,12 +62,12 @@ class LoadStore:
                             if self.validate_store(sede_store):
                                 self.save_store(sede_store)
 
-def validation_keys(self,name_validate=None):
-    if(
-        name_validate is not None
-        and name_validate!='undefined'
-        and name_validate!='Test'):
-        return True
+    def validation_keys(self,name_validate=None):
+        if(
+            name_validate is not None
+            and name_validate!='undefined'
+            and name_validate!='Test'):
+                return True
     
-    return False
+        return False
 
