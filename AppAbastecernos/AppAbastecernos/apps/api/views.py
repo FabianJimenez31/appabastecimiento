@@ -130,6 +130,19 @@ class StoreStatusList(APIView):
         serializer = StoreStatusSerializer(stores_status, many=True)
         return Response(serializer.data)
 
+class StoreListbyQuery(APIView):
+    parser_classes = (JSONParser,)
+
+    def get(self, request, name=None, format=None):
+        if name is not None:
+            stores = models.store.objects.filter(name__icontains=name)[0:6]
+            serializer = StoreSerializer(stores, many=True)
+            return Response(serializer.data)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class StoreReportList(APIView):
     parser_classes = (JSONParser,)
 
