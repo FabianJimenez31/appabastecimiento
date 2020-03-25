@@ -117,6 +117,30 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
+CORS_ORIGIN_WHITELIST = (
+    'google.com',
+    'hostname.example.com',
+    'localhost:8000',
+    'localhost:3000',
+    '127.0.0.1:9000'
+)
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+
+CORS_ORIGIN_REGEX_WHITELIST = (r'^(https?://)?(\w+\.)?google\.com$', )
+
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
