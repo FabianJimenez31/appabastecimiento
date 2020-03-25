@@ -5,5 +5,6 @@ urlpatterns = [
     path('', views.get, name='get'),
     path('store/', views.store, name='store'),
     path('migration/', views.migration_stores, name='migration'),
-    path('stores/',views.StoreList.as_view())
+    path('stores/',views.StoreList.as_view()),
+    path('products/',views.productList.as_view())
 ]

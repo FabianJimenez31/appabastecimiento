@@ -89,3 +89,29 @@ class StoreList(APIView):
         serializer = StoreSerializer(stores, many=True)
         return Response(serializer.data)
 
+class productList(APIView):
+    parser_classes = (JSONParser,)
+
+    def post(self, request, format=None):
+        try:
+
+            name = request.data['name']
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        description = None
+
+        if 'description' in request.data:
+            description = request.data['descripcion']
+        
+        if description is not None:
+            product = models.product(name=name, description=description)
+            product.save()
+        else:
+            product = models.product(name=name)
+            product.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+

@@ -11,7 +11,7 @@ class StoreStatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = store_status
-        fields = ('name',)
+        fields = ('id','name')
 
 
 class StoreReportSerializer(serializers.ModelSerializer):
