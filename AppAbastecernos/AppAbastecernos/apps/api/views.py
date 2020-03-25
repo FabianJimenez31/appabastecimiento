@@ -1,5 +1,10 @@
 from django.http import JsonResponse
 from . import models
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.parsers import JSONParser
+from .serializers import StoreSerializer
 from AppAbastecernos.util.load_stores import LoadStore
 from AppAbastecernos.config.config import Config
 config = Config()
@@ -69,13 +74,18 @@ def calculateJam(sto):
     else:
         return int(summ*(5/9))
 
-
-
-
-
-
 def migration_stores(request): 
     if LoadInformation:
         load_store = LoadStore()
         load_store.load_stores_api()
     return JsonResponse({'message':'Hola'})
+
+class StoreList(APIView):
+
+    parser_classes = (JSONParser,)
+
+    def get(self, request, format=None):
+        stores = models.store.objects.all()
+        serializer = StoreSerializer(stores, many=True)
+        return Response(serializer.data)
+
