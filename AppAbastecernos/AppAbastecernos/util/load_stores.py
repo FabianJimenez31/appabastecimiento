@@ -62,7 +62,7 @@ class LoadStore:
                             if self.validate_store(sede_store):
                                 self.save_store(sede_store)
 
-def validation_keys(self,name_validate):
+def validation_keys(self,name_validate=None):
     if(
         name_validate is not None
         and name_validate!='undefined'
