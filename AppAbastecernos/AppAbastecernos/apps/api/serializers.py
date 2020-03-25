@@ -11,7 +11,7 @@ class StoreStatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = store_status
-        fields = ('name')
+        fields = ('name',)
 
 
 class StoreReportSerializer(serializers.ModelSerializer):
@@ -24,20 +24,35 @@ class StoreReportSerializer(serializers.ModelSerializer):
 class StoreSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
     reports = serializers.SerializerMethodField('get_reports')
+    state = serializers.SerializerMethodField('get_state')
     class Meta:
         model = store
         
-        fields = ('id','name','latitude','longitude','products','reports')
+        fields = (
+            'id',
+            'name',
+            'latitude',
+            'longitude',
+            'products',
+            'reports', 
+            'state')
 
         
 
     def get_reports(self,obj):
         stores = store_report.objects.filter(store_id=obj.id)
         return StoreReportSerializer(stores, many=True).data
+    
+    def get_state(self,obj):
+        state = calculateJam(obj)
+        return str(state)
+
+
+
 
 
 def calculateJam(sto):
-    state = models.store_report.objects.all().filter(store=sto).order_by('-time')[:3]
+    state = store_report.objects.all().filter(store=sto).order_by('-time')[:3]
     summ = 0
     c = 0
     for st in state:
