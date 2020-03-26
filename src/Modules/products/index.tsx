@@ -1,27 +1,23 @@
 import React, { Component, Fragment } from 'react';
 import { HeaderComponent } from 'src/Components';
-import { Col, Row, Form, Input, Button, List } from 'antd';
+import { Col, Row, Form, Input, Button, Card } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import { StoreService } from 'src/Modules/services';
 
-class Stores extends Component<any, any> {
+interface stateComponetn {
+  list: any;
+}
+
+class Products extends Component<stateComponetn, any> {
   state = {
     list: []
   }
 
-  listStore: any;
-
   hamblerInputChange = async (e: any) => {
     const { target: { value } } = e;
     const list = await StoreService.filterStore(value);
-
     this.setState({ list });
-
-  }
-
-  onClickRedirect = ()=>{
-    this.props.history.push('/products');
   }
 
   render() {
@@ -33,10 +29,12 @@ class Stores extends Component<any, any> {
         <Col span={24}>
           <HeaderComponent updateEvent={() => { }} />
         </Col>
+        <Col span={24}>
+          <h2 style={{ textAlign: 'center', margin: '2%' }} >¿Quizas sea alguno de estos productos?</h2>
+        </Col>
         <Row style={{ padding: '10px' }}>
-
           <Col span={24}>
-            <Form.Item style={{ marginTop: '2em' }}>
+            <Form.Item>
               <Input
                 type='large'
                 placeholder='Ingrese una dirección'
@@ -44,27 +42,17 @@ class Stores extends Component<any, any> {
                 prefix={<SearchOutlined />}
               />
             </Form.Item>
-            <Form.Item>
-
-              <List
-                size="small"
-
-                bordered
-                dataSource={list}
-                renderItem={(item: any) => (<List.Item>{item.name}</List.Item>)}
-              />
-            </Form.Item>
           </Col>
-          <Button
-            onClick={this.onClickRedirect}
-            type='ghost'
-            className='warning-color'
-            style={{ width: '100%', marginBottom: '10px', position: 'fixed', bottom: '0px' }} >Continuar</Button>
+          <Col span={24}>
+            <Card>
+              
+            </Card>
+          </Col>
+          <Button type='ghost' className='warning-color' style={{ width: '100%', marginBottom: '10px', position: 'fixed', bottom: '0px' }} >Continuar</Button>
         </Row>
-
       </Fragment>
     );
   }
 }
 
-export default Stores
+export default Products

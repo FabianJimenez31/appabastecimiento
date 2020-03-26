@@ -3,7 +3,8 @@
 import {
   Home,
   Map,
-  Store
+  Store,
+  products
 } from 'src/Modules';
 console.log(Home)
 export default () => [
@@ -24,6 +25,12 @@ export default () => [
     exact: true,
     // eslint-disable-next-line react/display-name
     component: Map
+  },
+  {
+    path: '/products',
+    exact: true,
+    // eslint-disable-next-line react/display-name
+    component: products
   }
-  
+
 ]
