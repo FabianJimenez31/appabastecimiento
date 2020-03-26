@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CORS_ORIGIN_WHITELIST = (
     'http://google.com',
-    'httpw://google.com',
+    'https://google.com',
     'http://hostname.example.com',
     'http://localhost:8000',
     'http://localhost:3000',
