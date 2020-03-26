@@ -12,8 +12,8 @@ class product(models.Model):
 class store(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
-    latitude = models.CharField(max_length=50)
-    longitude = models.CharField(max_length=50)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
     products = models.ManyToManyField(product, through='store_product')
     def __str__(self):
         return self.name
