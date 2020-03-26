@@ -16,6 +16,7 @@ from .serializers import (
 from . import models
 from AppAbastecernos.util.load_stores import LoadStore
 from AppAbastecernos.config.config import Config
+from AppAbastecernos.util import ip_load
 config = Config()
 
 LoadInformation = config.get_migration_stores()
@@ -157,6 +158,7 @@ class StoreReportList(APIView):
         store_id = None
         store_status_id = None
         photo = None
+        print(request.META)
         try:
             store_id = request.data['store_id']
             store_status_id = request.data['status_id']
@@ -181,6 +183,7 @@ class StoreReportList(APIView):
         store_report_object = models.store_report(
                     store=store_object,
                     store_status=status_object,
+                    ip=ip_load.get_ip(request)
                     )
         store_report_object.save()
         if(
@@ -221,11 +224,6 @@ class StoreDetail(APIView):
         
         serializer =StoreSerializer(store_object)
         return Response(serializer.data)
-
-
-        
-
-
 
 
 class ProductReportList(APIView):

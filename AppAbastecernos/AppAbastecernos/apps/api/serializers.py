@@ -19,7 +19,7 @@ class StoreReportSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = store_report
-        fields = ('time', 'photo','store_status')
+        fields = ('time', 'photo','store_status','ip')
 
 class StoreSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
