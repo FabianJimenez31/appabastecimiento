@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Col, Row, Input, Button } from 'antd';
 import { AimOutlined, MenuOutlined } from '@ant-design/icons';
 import './header.css';
+import { Link } from "react-router-dom";
 
 interface stateComponent {
     position: string;
@@ -55,10 +56,12 @@ class HeaderComponent extends Component<stateProps, stateComponent> {
                 <Row style={{ padding: '10px' }} className='warning-color'>
                     <Col sm={12}>
                         <div className="header-posicion">
-                            <span>
-                                <AimOutlined className='header-icon' />
+                            <Link to='/maps' style={{color:'white'}}>
+                                <span>
+                                    <AimOutlined className='header-icon' />
                                 Calle 134 #67-15
                             </span>
+                            </Link>
                         </div>
                     </Col>
                     <Col sm={12}>
@@ -71,15 +74,17 @@ class HeaderComponent extends Component<stateProps, stateComponent> {
                     borderBottomLeftRadius: '10px'
                 }} className='warning-color'>
                     <Col sm={1} xs={3} span={3}>
-                        <Button
-                            type='default'
-                            icon={<MenuOutlined />}
-                            className='warning-color' 
-                            style={{
-                                borderColor:'transparent',
-                                boxShadow:'0px 0px 0px rgba(0, 0, 0, 0)'
-                            }}
+                        <Link to='/'>
+                            <Button
+                                type='default'
+                                icon={<MenuOutlined />}
+                                className='warning-color'
+                                style={{
+                                    borderColor: 'transparent',
+                                    boxShadow: '0px 0px 0px rgba(0, 0, 0, 0)'
+                                }}
                             />
+                        </Link>
                     </Col>
                     <Col sm={12}>
                         <Input placeholder="Enecuentra lo que necesitas"></Input>

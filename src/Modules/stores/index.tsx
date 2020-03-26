@@ -4,6 +4,7 @@ import { Col, Row, Form, Input, Button, List } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import { StoreService } from 'src/Modules/services';
+import { Link } from 'react-router-dom';
 
 class Stores extends Component<any, any> {
   state = {
@@ -12,15 +13,18 @@ class Stores extends Component<any, any> {
 
   listStore: any;
 
+
   hamblerInputChange = async (e: any) => {
+    let list: Array<any> = [];
     const { target: { value } } = e;
-    const list = await StoreService.filterStore(value);
-
-    this.setState({ list });
-
+    StoreService.filterStore(value).then((res: any) => {
+      list = res;
+    }).finally(() => {
+      this.setState({ list: list });
+    });
   }
 
-  onClickRedirect = ()=>{
+  onClickRedirect = () => {
     this.props.history.push('/products');
   }
 
@@ -34,7 +38,6 @@ class Stores extends Component<any, any> {
           <HeaderComponent updateEvent={() => { }} />
         </Col>
         <Row style={{ padding: '10px' }}>
-
           <Col span={24}>
             <Form.Item style={{ marginTop: '2em' }}>
               <Input
@@ -45,13 +48,15 @@ class Stores extends Component<any, any> {
               />
             </Form.Item>
             <Form.Item>
-
               <List
                 size="small"
-
                 bordered
                 dataSource={list}
-                renderItem={(item: any) => (<List.Item>{item.name}</List.Item>)}
+                renderItem={(item: any) => (
+                  <Link to={`/products/${item.id}`} >
+                    <List.Item >{item.name}</List.Item>
+                  </Link>
+                )}
               />
             </Form.Item>
           </Col>
@@ -61,7 +66,6 @@ class Stores extends Component<any, any> {
             className='warning-color'
             style={{ width: '100%', marginBottom: '10px', position: 'fixed', bottom: '0px' }} >Continuar</Button>
         </Row>
-
       </Fragment>
     );
   }

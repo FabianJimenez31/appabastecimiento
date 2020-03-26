@@ -6,7 +6,6 @@ import {
   Store,
   products
 } from 'src/Modules';
-console.log(Home)
 export default () => [
   {
     path: '/',
@@ -27,7 +26,7 @@ export default () => [
     component: Map
   },
   {
-    path: '/products',
+    path: '/products/:id',
     exact: true,
     // eslint-disable-next-line react/display-name
     component: products

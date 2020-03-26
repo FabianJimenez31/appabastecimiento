@@ -1,13 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { HeaderComponent, CardComponent } from 'src/Components';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { Marker } from 'mapbox-gl';
 
 import './master.css';
+import { StoreService } from '../services';
 
 interface stateComponent {
     lng: number;
     lat: number;
     zoom: number;
+    marker: Array<any>;
 }
 
 
@@ -23,17 +25,30 @@ class Home extends Component<any, stateComponent>{
         this.state = {
             lng: -74.112,
             lat: 4.5504,
-            zoom: 11
-
+            zoom: 11,
+            marker: []
         };
 
     }
-
     componentDidMount() {
+        const marker: Array<any> = [];
+        StoreService.store().then((res: any) => {
+            res.forEach((item: any) => {
+                const json = {
+                    //name: item.name,
+                    lng: item.longitude,
+                    lat: item.latitude,
+                }
+                marker.push(json);
+            });
+        });
+    }
 
-        const { lng, lat, zoom } = this.state;
+    loadMaps() {
 
+        const { lng, lat, zoom, marker } = this.state;
 
+        console.log(lng, lat);
         this.map = new mapboxgl.Map({
             container: this.mapRef.current,
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -51,25 +66,30 @@ class Home extends Component<any, stateComponent>{
                 zoom: Number(this.map.getZoom().toFixed(2))
             });
         });
-        this.map.addControl(new mapboxgl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true
-            },
-            trackUserLocation: true
-        }));
+        /*  this.map.addControl(new mapboxgl.GeolocateControl({
+             positionOptions: {
+                 enableHighAccuracy: true
+             },
+             trackUserLocation: true
+         })); */
+
+
+        const mark = { lng: -74.087697, lat: 4.728263 };
+        console.log(mark)
+        new Marker()
+            .setLngLat(mark)
+            .addTo(this.map);
+
+
         this.map.loaded();
     }
-   /*  componentWillUnmount() {
-        this.map.on('load', () => {
-            console.log(this.map.resize());
-        });
-    } */
+
 
 
 
     updateEvent = (data: stateComponent) => {
         this.setState({ ...data });
-        this.map.loaded()
+        this.loadMaps();
     }
 
     render() {

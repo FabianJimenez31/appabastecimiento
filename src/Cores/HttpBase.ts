@@ -97,6 +97,6 @@ export class HttpBase {
 
     private extract_data(response: AxiosResponse<any>): Promise<any> {
         const { data } = response;
-        return data.length > 0 ? data : [];
+        return data;
     }
 }
