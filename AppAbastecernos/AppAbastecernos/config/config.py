@@ -12,6 +12,8 @@ class Config:
         self.enviroment = os.getenv("ENV")
         self.api_komercia = os.getenv("API_KOMERCIA")
         self.migration_stores = os.getenv("MIGRATION_STORES")
+        self.media_url = os.getenv("MEDIA_URL")
+        self.media_root = os.getenv("MEDIA_ROOT")
 
     
     def get_connectiondb(self):
@@ -31,4 +33,10 @@ class Config:
     
     def get_migration_stores(self):
         return self.migration_stores
+    
+    def get_media_info(self):
+        return {
+            "media_url":self.media_url,
+            "media_root":self.media_root
+        }
         

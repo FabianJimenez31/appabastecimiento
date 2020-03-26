@@ -30,3 +30,6 @@ __pycache__/
 
 /app
 *.pyc
+
+/AppAbastecernos/media/images
+AppAbastecernos/AppAbastecernos/__pycache__/

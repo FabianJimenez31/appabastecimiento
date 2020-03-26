@@ -45,11 +45,7 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    )
+    
 
 }
 
@@ -157,5 +153,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
+media_info = config.get_media_info()
 STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, media_info['media_root'])
+MEDIA_URL = media_info['media_url']

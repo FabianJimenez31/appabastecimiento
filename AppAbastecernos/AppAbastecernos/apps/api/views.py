@@ -3,7 +3,8 @@ from django.http import (
         JsonResponse,
         HttpResponse
     )
-from . import models
+from django.core.files.storage import FileSystemStorage
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +13,7 @@ from .serializers import (
     StoreSerializer,
     StoreStatusSerializer
         )
+from . import models
 from AppAbastecernos.util.load_stores import LoadStore
 from AppAbastecernos.config.config import Config
 config = Config()
@@ -144,8 +146,7 @@ class StoreListbyQuery(APIView):
 
 
 class StoreReportList(APIView):
-    parser_classes = (JSONParser,)
-
+    
     def get_object(self,pk):
         try:
             return models.store.objects.get(pk=pk)
@@ -155,7 +156,6 @@ class StoreReportList(APIView):
     def post(self,request,format=None):
         store_id = None
         store_status_id = None
-      
         photo = None
         try:
             store_id = request.data['store_id']
@@ -165,8 +165,8 @@ class StoreReportList(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        if 'photo' in request.data:
-            photo = request.data['photo']
+        if 'photo' in request.FILES:
+            photo = request.FILES['photo']
         else:
             photo = ''
         store_object = None
@@ -181,10 +181,20 @@ class StoreReportList(APIView):
         store_report_object = models.store_report(
                     store=store_object,
                     store_status=status_object,
-                    time=time,
-                    photo=photo
                     )
         store_report_object.save()
+        if(
+            photo is not None
+            and photo!=''
+            and store_report_object is not None
+            ):
+            fs = FileSystemStorage()
+            ubication = fs.save(
+            'images/'+str(store_report_object.id)+photo.name,
+            photo
+            )
+            store_report_object.photo = fs.url(ubication)
+            store_report_object.save()
 
         return Response(status=status.HTTP_201_CREATED)
     
