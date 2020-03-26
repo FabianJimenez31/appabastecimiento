@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'AppAbastecernos.apps.api',
     'rest_framework',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'AppAbastecernos.urls'
@@ -115,11 +117,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 CORS_ORIGIN_WHITELIST = (
-    'google.com',
-    'hostname.example.com',
-    'localhost:8000',
-    'localhost:3000',
-    '127.0.0.1:9000'
+    'http://google.com',
+    'httpw://google.com',
+    'http://hostname.example.com',
+    'http://localhost:8000',
+    'http://localhost:3000',
+    'http://127.0.0.1:8000'
 )
 
 CORS_ALLOW_METHODS = (
