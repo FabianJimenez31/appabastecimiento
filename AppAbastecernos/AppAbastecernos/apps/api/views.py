@@ -259,7 +259,7 @@ class ProductReportList(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class StoreProductList(APIView):
+class StoreStockProductList(APIView):
     parser_classes = (JSONParser,)
 
     def post(self, request, format=None):
@@ -290,6 +290,7 @@ class StoreProductList(APIView):
             )
         return Response(status=status.HTTP_201_CREATED)
 
+ 
 
 
 
