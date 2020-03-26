@@ -155,12 +155,12 @@ class StoreReportList(APIView):
     def post(self,request,format=None):
         store_id = None
         store_status_id = None
-        time = None
+      
         photo = None
         try:
             store_id = request.data['store_id']
             store_status_id = request.data['status_id']
-            time = request.data['time']
+            
 
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -187,6 +187,35 @@ class StoreReportList(APIView):
         store_report_object.save()
 
         return Response(status=status.HTTP_201_CREATED)
+    
+
+
+class StoreDetail(APIView):
+    parser_classes = (JSONParser,)
+    
+    def get_object(sef,pk_store):
+        try:
+            return models.store.objects.get(pk=pk_store)
+        except models.store.DoesNotExist:
+            raise Http404
+
+
+
+    def get(self, request, pk_store, format=None):
+        store_object = None
+        try:
+            pk_store = int(pk_store)
+            store_object = self.get_object(pk_store)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer =StoreSerializer(store_object)
+        return Response(serializer.data)
+
+
+        
+
+
 
 
 class ProductReportList(APIView):
@@ -196,12 +225,12 @@ class ProductReportList(APIView):
         product_id = None
         before = None
         after = None
-        time = None
+       
         try:
             product_id = request.data['product_id']
             before = request.data['before']
             after = request.data['after']
-            time = request.data['time']
+            
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         product_object = None
@@ -214,8 +243,7 @@ class ProductReportList(APIView):
         product_report_object = models.product_report(
             product=product_object,
             before=before,
-            after=after,
-            time=time
+            after=after
         )
 
         product_report_object.save()
