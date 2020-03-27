@@ -13,6 +13,8 @@ from .serializers import (
     StoreSerializer,
     StoreStatusSerializer
         )
+from drf_yasg.utils import swagger_auto_schema 
+from drf_yasg import openapi
 from . import models
 from AppAbastecernos.util.load_stores import LoadStore
 from AppAbastecernos.config.config import Config
@@ -136,7 +138,10 @@ class StoreStatusList(APIView):
 
 class StoreListbyQuery(APIView):
     parser_classes = (JSONParser,)
-
+    @swagger_auto_schema(
+        responses={200:openapi.Response('Stores',StoreSerializer(many=True))},
+        tags=['Stores']
+        )
     def get(self, request, name=None, format=None):
         if name is not None:
             stores = models.store.objects.filter(name__icontains=name)[0:6]
@@ -155,11 +160,25 @@ class StoreReportList(APIView):
         except models.store.DoesNotExist:
             raise Http404
 
+    @swagger_auto_schema(
+        responses={201:''},
+        operation_description="Create Report Store Description",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['status_id','status_id','photo'],
+            properties={
+                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'status_id': openapi.Schema(type=openapi.TYPE_STRING),
+                'photo': openapi.Schema(type=openapi.TYPE_FILE),
+
+            },
+        ),
+        
+    )
     def post(self,request,format=None):
         store_id = None
         store_status_id = None
         photo = None
-        print(request.META)
         try:
             store_id = request.data['store_id']
             store_status_id = request.data['status_id']
@@ -214,6 +233,11 @@ class StoreDetail(APIView):
             raise Http404
 
 
+    @swagger_auto_schema(
+        responses={200:openapi.Response('Store',StoreSerializer)},
+        tags=['Store']
+
+    )
 
     def get(self, request, pk_store, format=None):
         store_object = None
@@ -229,7 +253,21 @@ class StoreDetail(APIView):
 
 class ProductReportList(APIView):
     parser_classes = (JSONParser,)
+    @swagger_auto_schema(
+        responses={201:''},
+        operation_description="Create Report Description",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['product_id','before','after'],
+            properties={
+                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'before': openapi.Schema(type=openapi.TYPE_STRING),
+                'after': openapi.Schema(type=openapi.TYPE_STRING),
 
+            },
+        ),
+        
+    )
     def post(self, request, format=None):
         product_id = None
         before = None
@@ -262,7 +300,21 @@ class ProductReportList(APIView):
 
 class StoreStockProductList(APIView):
     parser_classes = (JSONParser,)
+    @swagger_auto_schema(
+        responses={201:''},
+        operation_description="Create Report Stock_Product_Description",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['store_id','product_id','amount'],
+            properties={
+                'store_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'amount': openapi.Schema(type=openapi.TYPE_INTEGER),
 
+            },
+        ),
+        
+    )
     def post(self, request, format=None):
         store_id = None
         product_id = None
@@ -295,7 +347,10 @@ class StoreStockProductList(APIView):
 
 class StoreByGeoPointList(APIView):
     parser_classes = (JSONParser,)
-
+    @swagger_auto_schema(
+        responses={200:StoreSerializer(many=True)},
+        tags=['Stores']
+    )
     def get(self, request,latitude,longitude,format=None):
         geo_point = GeoPoint()
         latitude = float(latitude)

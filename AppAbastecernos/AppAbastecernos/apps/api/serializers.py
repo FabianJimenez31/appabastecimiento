@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from drf_yasg.utils import swagger_serializer_method
 from .models import store, product, store_report, store_status
+
 
 class ProductSerializer(serializers.ModelSerializer):
     
@@ -19,7 +21,7 @@ class StoreReportSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = store_report
-        fields = ('time', 'photo','store_status','ip')
+        fields = ('time', 'photo','store_status')
 
 class StoreSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
@@ -38,7 +40,7 @@ class StoreSerializer(serializers.ModelSerializer):
             'state')
 
         
-
+    @swagger_serializer_method(serializer_or_field=StoreReportSerializer(many=True))
     def get_reports(self,obj):
         stores = store_report.objects.filter(store_id=obj.id)
         return StoreReportSerializer(stores, many=True).data
