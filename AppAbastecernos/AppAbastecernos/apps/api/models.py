@@ -44,7 +44,8 @@ class store_product(models.Model):
 
 
 class product_report(models.Model):
-    product = models.ForeignKey(store_product, on_delete=models.CASCADE)
+    product = models.ForeignKey('product', on_delete=models.CASCADE)
+    store = models.ForeignKey('store', on_delete=models.CASCADE)
     before = models.IntegerField()
     after = models.IntegerField()
     time = models.DateTimeField(default=timezone.now)
