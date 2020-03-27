@@ -259,12 +259,13 @@ class ProductReportList(APIView):
         operation_description="Create Report Description",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['product_id','before','after','unit_id'],
+            required=['product_id','before','after','unit_id','store_id'],
             properties={
                 'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
                 'before': openapi.Schema(type=openapi.TYPE_STRING),
                 'after': openapi.Schema(type=openapi.TYPE_STRING),
                 'unit_id':openapi.Schema(type=openapi.TYPE_INTEGER),
+                'store_id':openapi.Schema(type=openapi.TYPE_INTEGER),
 
             },
         ),
@@ -275,23 +276,28 @@ class ProductReportList(APIView):
         before = None
         after = None
         unit_id = None
+        store_id = None
        
         try:
             product_id = request.data['product_id']
             before = request.data['before']
             after = request.data['after']
             unit_id = request.data['unit_id']
+            store_id = request.data['store_id']
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         product_object = None
+        store_object = None
         try:
 
             product_object = models.product.objects.get(pk=product_id)
+            store_object = models.store.objects.get(ok=store_id)
         except models.product.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         product_report_object = models.product_report(
             product=product_object,
+            store=store_object,
             before=before,
             after=after,
             units_id=unit_id
