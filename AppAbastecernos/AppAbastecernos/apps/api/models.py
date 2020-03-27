@@ -49,4 +49,4 @@ class product_report(models.Model):
     after = models.IntegerField()
     time = models.DateTimeField(default=timezone.now)
     ip = models.CharField(max_length=20)
-    units = models.ForeignKey(units, on_delete=models.CASCADE, default=6)
+    unit = models.ForeignKey(units, on_delete=models.CASCADE, default=6)
