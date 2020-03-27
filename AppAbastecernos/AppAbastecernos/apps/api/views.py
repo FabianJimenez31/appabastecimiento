@@ -17,6 +17,7 @@ from . import models
 from AppAbastecernos.util.load_stores import LoadStore
 from AppAbastecernos.config.config import Config
 from AppAbastecernos.util import ip_load
+from AppAbastecernos.util.geo_point import GeoPoint
 config = Config()
 
 LoadInformation = config.get_migration_stores()
@@ -292,6 +293,28 @@ class StoreStockProductList(APIView):
 
  
 
+class StoreByGeoPointList(APIView):
+    parser_classes = (JSONParser,)
+
+    def get(self, request,latitude,longitude,format=None):
+        geo_point = GeoPoint()
+        latitude = float(latitude)
+        longitude = float(longitude)
+        latitude_min = float(latitude-geo_point.get_haversine_latitude())
+        latitude_max = float(latitude+geo_point.get_haversine_latitude())
+        longitude_min = float(longitude-geo_point.get_haversine_longitude(latitude))
+        longitude_max = float(longitude+geo_point.get_haversine_longitude(latitude))
+
+        stores_object = models.store.objects.filter(
+            latitude__gte=latitude_min,
+            latitude__lte=latitude_max,
+            longitude__gte=longitude_min,
+            longitude__lte=longitude_max,
+
+        )
+        serializer = StoreSerializer(stores_object, many=True)
+
+        return Response(serializer.data)
 
 
 

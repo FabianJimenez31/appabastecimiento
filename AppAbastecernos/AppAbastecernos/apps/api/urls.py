@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('store/',views.StoreList.as_view()),
+    path('store/<latitude>/<longitude>/',views.StoreByGeoPointList.as_view()),
     path('store/<int:pk_store>/',views.StoreDetail.as_view()),
     path('products/',views.productList.as_view()),
     path('store/status/',views.StoreStatusList.as_view()),
