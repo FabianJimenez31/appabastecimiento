@@ -30,9 +30,14 @@ class store_report(models.Model):
     photo = models.CharField(max_length=200, blank=True, default='')
     ip = models.CharField(max_length=20)
 
+class units(models.Model):
+    name = models.CharField(max_length=100)
+    short_name = models.CharField(max_length=100)
+
 class store_product(models.Model):
     store = models.ForeignKey(store, on_delete=models.CASCADE)
     product = models.ForeignKey(product, on_delete=models.CASCADE)
+    unit = models.ForeignKey(units, on_delete=models.CASCADE)
     amount = models.IntegerField()
 
 
