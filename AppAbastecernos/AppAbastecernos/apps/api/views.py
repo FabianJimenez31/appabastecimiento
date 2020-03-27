@@ -291,7 +291,7 @@ class ProductReportList(APIView):
         try:
 
             product_object = models.product.objects.get(pk=product_id)
-            store_object = models.store.objects.get(ok=store_id)
+            store_object = models.store.objects.get(pk=store_id)
         except models.product.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -300,7 +300,7 @@ class ProductReportList(APIView):
             store=store_object,
             before=before,
             after=after,
-            units_id=unit_id
+            unit_id=unit_id
         )
 
         product_report_object.save()
