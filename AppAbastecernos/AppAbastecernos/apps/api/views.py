@@ -380,7 +380,22 @@ class StoreByGeoPointList(APIView):
         serializer = StoreSerializer(stores_object, many=True)
 
         return Response(serializer.data)
-    
+    @swagger_auto_schema(
+        responses={200:StoreSerializer(many=True)},
+        operation_description="Return Stores by geopoint and products",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['products'],
+            properties={
+                'products': openapi.Schema(type=openapi.TYPE_ARRAY,
+                items=openapi.Items(type=openapi.TYPE_INTEGER)
+                ),
+            
+
+            }
+        ),
+        
+    )
     def post(self, request, latitude, longitude, format=None):
         products = request.data['products']      
         geo_point = GeoPoint()
