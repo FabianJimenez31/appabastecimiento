@@ -329,15 +329,14 @@ class StoreStockProductList(APIView):
         try:
             store_id = request.data['store_id']
             products = request.data['products']
-            store_object = models.store.objects.get(pk=store_id)
+            
             
             for product in products:
-                product_object = models.product.objects.get(pk=product['id'])
-                store_product_object = models.store_product(
-                store=store_object,
-                product=product_object,
-                amount=product['count']
-                )
+                
+                store_product_object = models.store_product.objects.filter(
+                store_id=store_id,
+                product_id=product['id'])[0]
+                store_product_object.amount = product['count']
                 store_product_object.save()
 
 
