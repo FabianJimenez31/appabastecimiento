@@ -308,8 +308,8 @@ class StoreStockProductList(APIView):
             required=['store_id','product_id','amount'],
             properties={
                 'store_id': openapi.Schema(type=openapi.TYPE_INTEGER),
-                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
-                'amount': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'products': openapi.Schema(type=openapi.TYPE_INTEGER),
+            
 
             },
         ),
@@ -317,30 +317,29 @@ class StoreStockProductList(APIView):
     )
     def post(self, request, format=None):
         store_id = None
-        product_id = None
-        amount = None
-
-        try:
-            store_id = request.data['store_id']
-            product_id = request.data['product_id']
-            amount = request.data['amount']
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
         store_object = None
         product_object = None
 
         try:
+            store_id = request.data['store_id']
+            products = request.data['products']
             store_object = models.store.objects.get(pk=store_id)
-            product_object = models.product.objects.get(pk=product_id)
+            
+            for product in products:
+                product_object = models.product.objects.get(pk=product['id'])
+                store_product_object = models.store_product(
+                store=store_object,
+                product=product_object,
+                amount=product['count']
+                )
+                store_product_object.save()
+
+
+            
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        store_product_object = models.store_product(
-            store=store_object,
-            product=product_object,
-            amount=amount
-            )
+
         return Response(status=status.HTTP_201_CREATED)
 
  

@@ -9,7 +9,7 @@ urlpatterns = [
     path('store/status/',views.StoreStatusList.as_view()),
     path('report/store/',views.StoreReportList.as_view()),
     path('report/product/',views.ProductReportList.as_view()),
-    path('store/stock/product/',views.StoreStockProductList.as_view()),
+    path('report/stock/product/',views.StoreStockProductList.as_view()),
     path('store/<slug:name>/',views.StoreListbyQuery.as_view())
 
     
