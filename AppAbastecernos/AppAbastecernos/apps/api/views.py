@@ -11,7 +11,8 @@ from rest_framework import status
 from rest_framework.parsers import JSONParser
 from .serializers import (
     StoreSerializer,
-    StoreStatusSerializer
+    StoreStatusSerializer,
+    UnitSerializer
         )
 from drf_yasg.utils import swagger_auto_schema 
 from drf_yasg import openapi
@@ -258,11 +259,12 @@ class ProductReportList(APIView):
         operation_description="Create Report Description",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['product_id','before','after'],
+            required=['product_id','before','after','unit_id'],
             properties={
                 'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
                 'before': openapi.Schema(type=openapi.TYPE_STRING),
                 'after': openapi.Schema(type=openapi.TYPE_STRING),
+                'unit_id':openapi.Schema(type=openapi.TYPE_INTEGER),
 
             },
         ),
@@ -272,12 +274,13 @@ class ProductReportList(APIView):
         product_id = None
         before = None
         after = None
+        unit_id = None
        
         try:
             product_id = request.data['product_id']
             before = request.data['before']
             after = request.data['after']
-            
+            unit_id = request.data['unit_id']
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         product_object = None
@@ -290,7 +293,8 @@ class ProductReportList(APIView):
         product_report_object = models.product_report(
             product=product_object,
             before=before,
-            after=after
+            after=after,
+            units_id=unit_id
         )
 
         product_report_object.save()
@@ -308,7 +312,9 @@ class StoreStockProductList(APIView):
             required=['store_id','product_id','amount'],
             properties={
                 'store_id': openapi.Schema(type=openapi.TYPE_INTEGER),
-                'products': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'products': openapi.Schema(type=openapi.TYPE_ARRAY,
+                items=openapi.Items(type=openapi.TYPE_STRING)
+                ),
             
 
             },
@@ -370,6 +376,13 @@ class StoreByGeoPointList(APIView):
 
         return Response(serializer.data)
 
+class UnitList(APIView):
+    parser_classes = (JSONParser,)
+
+    def get(self, request, format=None):
+        units = models.units.objects.all()
+        serializer = UnitSerializer(many=True)
+        return Response(serializer.data)
 
 
 

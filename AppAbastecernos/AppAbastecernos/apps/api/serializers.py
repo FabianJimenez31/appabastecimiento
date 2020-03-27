@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
-from .models import store, product, store_report, store_status
+from .models import (
+    store, 
+    product, 
+    store_report, 
+    store_status,
+    units
+)
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -50,7 +56,11 @@ class StoreSerializer(serializers.ModelSerializer):
         return str(state)
 
 
+class UnitSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = units
+        fields =('id', 'name', 'short_name')
 
 
 def calculateJam(sto):
