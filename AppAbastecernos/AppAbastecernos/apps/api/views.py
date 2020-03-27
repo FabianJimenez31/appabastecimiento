@@ -374,6 +374,40 @@ class StoreByGeoPointList(APIView):
         serializer = StoreSerializer(stores_object, many=True)
 
         return Response(serializer.data)
+    
+    def post(self, request, latitude, longitude, format=None):
+        products = request.data['products']      
+        geo_point = GeoPoint()
+        latitude = float(latitude)
+        longitude = float(longitude)
+        latitude_min = float(latitude-geo_point.get_haversine_latitude())
+        latitude_max = float(latitude+geo_point.get_haversine_latitude())
+        longitude_min = float(longitude-geo_point.get_haversine_longitude(latitude))
+        longitude_max = float(longitude+geo_point.get_haversine_longitude(latitude))
+
+        stores_object = models.store.objects.filter(
+            latitude__gte=latitude_min,
+            latitude__lte=latitude_max,
+            longitude__gte=longitude_min,
+            longitude__lte=longitude_max,
+
+        )
+        store_result = stores_object
+        
+
+        for store in stores_object:
+            count = 0 
+            products_store = models.store_product.ojects.filter(store_id=store.id)
+
+            for product_store in products_store:
+                if product_store.id in products:
+                    count+=1
+                
+            if count==0:
+                store_result = stores_result.exclude(pk=store.id)
+
+        serializer = StoreSerializer(store_result, many=True)
+
 
 class UnitList(APIView):
     parser_classes = (JSONParser,)
