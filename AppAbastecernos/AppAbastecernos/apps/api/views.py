@@ -432,7 +432,11 @@ class StoreByGeoPointList(APIView):
 
 class UnitList(APIView):
     parser_classes = (JSONParser,)
+    @swagger_auto_schema(
+        responses={200:openapi.Response('Store',UnitSerializer)},
+        tags=['Store']
 
+    )
     def get(self, request, format=None):
         units = models.units.objects.all()
         serializer = UnitSerializer(many=True)
