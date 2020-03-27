@@ -33,11 +33,14 @@ class store_report(models.Model):
 class units(models.Model):
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name+' ('+self.short_name+')'
+
 
 class store_product(models.Model):
     store = models.ForeignKey(store, on_delete=models.CASCADE)
     product = models.ForeignKey(product, on_delete=models.CASCADE)
-    unit = models.ForeignKey(units, on_delete=models.CASCADE)
+    units = models.ForeignKey(units, on_delete=models.CASCADE, default=6)
     amount = models.IntegerField()
 
 
