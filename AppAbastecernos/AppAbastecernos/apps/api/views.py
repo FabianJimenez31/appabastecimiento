@@ -439,7 +439,7 @@ class UnitList(APIView):
     )
     def get(self, request, format=None):
         units = models.units.objects.all()
-        serializer = UnitSerializer(many=True)
+        serializer = UnitSerializer(units,many=True)
         return Response(serializer.data)
 
 
