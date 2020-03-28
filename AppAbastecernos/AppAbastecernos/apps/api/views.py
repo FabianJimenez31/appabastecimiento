@@ -436,7 +436,7 @@ class StoreByGeoPointList(APIView):
                     count+=1
                 
             if count==0:
-                store_result = stores_result.exclude(pk=store.id)
+                store_result = store_result.exclude(pk=store.id)
 
         serializer = StoreSerializer(store_result, many=True)
 
