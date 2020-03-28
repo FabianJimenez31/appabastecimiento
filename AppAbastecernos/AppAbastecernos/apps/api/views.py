@@ -429,7 +429,7 @@ class StoreByGeoPointList(APIView):
 
         for store in stores_object:
             count = 0 
-            products_store = models.store_product.ojects.filter(store_id=store.id)
+            products_store = models.store_product.objects.filter(store_id=store.id)
 
             for product_store in products_store:
                 if products.count(int(product_store.id))>0:
