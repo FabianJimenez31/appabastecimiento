@@ -103,6 +103,41 @@ class StoreList(APIView):
         stores = models.store.objects.all()
         serializer = StoreSerializer(stores, many=True)
         return Response(serializer.data)
+    @swagger_auto_schema(
+        responses={201:''},
+        operation_description="Create Store",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['name','latitude','longitude',],
+            properties={
+                'name': openapi.Schema(type=openapi.TYPE_STRING),
+                'latitude': openapi.Schema(type=openapi.TYPE_NUMBER),
+                'longitude': openapi.Schema(type=openapi.TYPE_NUMBER),
+
+            },
+        ),
+        
+    )
+    def post(self, request, format=None):
+        name = None
+        latitude = None
+        longitude = None
+
+        try:
+            name = request.data['name']
+            latitude = request.data['latitude']
+            longitude =request.data['longitude']
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        store_object = models.store(
+            name=name, 
+            latitude=latitude, 
+            longitude=longitude)
+        
+        store_object.save()
+
+        return Response(status=status.HTTP_201_CREATED)
 
 
 
