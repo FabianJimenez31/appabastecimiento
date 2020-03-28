@@ -12,7 +12,8 @@ from rest_framework.parsers import JSONParser
 from .serializers import (
     StoreSerializer,
     StoreStatusSerializer,
-    UnitSerializer
+    UnitSerializer,
+    ProductSerializer
         )
 from drf_yasg.utils import swagger_auto_schema 
 from drf_yasg import openapi
@@ -103,6 +104,10 @@ class StoreList(APIView):
         serializer = StoreSerializer(stores, many=True)
         return Response(serializer.data)
 
+
+
+
+
 class productList(APIView):
     parser_classes = (JSONParser,)
 
@@ -126,6 +131,11 @@ class productList(APIView):
             product.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+    def get(self, request, format=None):
+        products = models.product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
 
 
 class StoreStatusList(APIView):
@@ -432,11 +442,7 @@ class StoreByGeoPointList(APIView):
 
 class UnitList(APIView):
     parser_classes = (JSONParser,)
-    @swagger_auto_schema(
-        responses={200:openapi.Response('Store',UnitSerializer)},
-        tags=['Store']
 
-    )
     def get(self, request, format=None):
         units = models.units.objects.all()
         serializer = UnitSerializer(units,many=True)
