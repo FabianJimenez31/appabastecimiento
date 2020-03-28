@@ -407,7 +407,8 @@ class StoreByGeoPointList(APIView):
         
     )
     def post(self, request, latitude, longitude, format=None):
-        products = request.data['products']      
+        products = request.data['products']
+        products = [int(product) for product in products]      
         geo_point = GeoPoint()
         latitude = float(latitude)
         longitude = float(longitude)
