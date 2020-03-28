@@ -439,6 +439,7 @@ class StoreByGeoPointList(APIView):
                 store_result = store_result.exclude(pk=store.id)
 
         serializer = StoreSerializer(store_result, many=True)
+        return Response(serializer.data)
 
 
 class UnitList(APIView):
