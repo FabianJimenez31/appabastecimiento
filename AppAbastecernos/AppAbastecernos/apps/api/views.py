@@ -196,7 +196,7 @@ class StoreListbyQuery(APIView):
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    def post(self, request, name=None, format=None):
+    def post(self, request, format=None):
         name = None
         stores = None
 
