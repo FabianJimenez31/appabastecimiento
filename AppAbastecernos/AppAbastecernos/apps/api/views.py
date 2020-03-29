@@ -195,6 +195,18 @@ class StoreListbyQuery(APIView):
             return Response(serializer.data)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    def post(self, request, format=None):
+        name = None
+        stores = None
+
+        try:
+            name = request.data['name']
+            stores = models.store.objects.filter(name__icontains=name)[0:6]
+            serializer = StoreSerializer(stores, many=True)
+            return Response(serializer.data)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST) 
 
 
 
