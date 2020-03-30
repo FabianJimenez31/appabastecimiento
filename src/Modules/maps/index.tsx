@@ -10,6 +10,8 @@ interface stateComponent {
     lat: number;
     zoom: number;
     marker: Array<any>;
+    products: Array<any>;
+    data: Array<any>;
 }
 
 
@@ -26,27 +28,22 @@ class Home extends Component<any, stateComponent>{
             lng: -74.112,
             lat: 4.5504,
             zoom: 11,
-            marker: []
+            marker: [],
+            products: [],
+            data: []
         };
 
     }
     componentDidMount() {
-        const marker: Array<any> = [];
-        StoreService.store().then((res: any) => {
-            res.forEach((item: any) => {
-                const json = {
-                    //name: item.name,
-                    lng: item.longitude,
-                    lat: item.latitude,
-                }
-                marker.push(json);
-            });
-        });
+        let list: any = localStorage.getItem('pd');
+        list = JSON.parse(list);
+        let produc = list.map((i: any) => Number(i));
+        this.setState({ products: produc });
     }
 
     loadMaps() {
 
-        const { lng, lat, zoom, marker } = this.state;
+        const { lng, lat, zoom } = this.state;
 
         console.log(lng, lat);
         this.map = new mapboxgl.Map({
@@ -66,18 +63,14 @@ class Home extends Component<any, stateComponent>{
                 zoom: Number(this.map.getZoom().toFixed(2))
             });
         });
-        /*  this.map.addControl(new mapboxgl.GeolocateControl({
-             positionOptions: {
-                 enableHighAccuracy: true
-             },
-             trackUserLocation: true
-         })); */
 
 
         const mark = { lng: -74.087697, lat: 4.728263 };
         console.log(mark)
         new Marker()
             .setLngLat(mark)
+            .setPopup(new mapboxgl.Popup({ offset: 25 })
+                .setHTML(`<h3> Estas Aquí </h3>`))
             .addTo(this.map);
 
 
@@ -89,22 +82,48 @@ class Home extends Component<any, stateComponent>{
 
     updateEvent = (data: stateComponent) => {
         this.setState({ ...data });
-        this.loadMaps();
+        const json = {
+            products: this.state.products
+        }
+        StoreService.storeGeolocation(data.lat, data.lng, json).then(
+            (res: any) => {
+                const { data } = res;
+                this.loadMaps();
+                this.setState({ data })
+                data.forEach((item: any) => {
+
+                    /*  const el = document.createElement('div');
+                     el.className = 'marker';
+                     el.style.backgroundImage =
+                         'url(https://placekitten.com/g/' +
+                         marker.properties.iconSize.join('/') +
+                         '/)';
+                     el.style.width = '27px';
+                     el.style.height = '41px'; */
+
+                    new Marker()
+                        .setLngLat({ lng: item.longitude, lat: item.latitude })
+                        .setPopup(new mapboxgl.Popup({ offset: 25 })
+                            .setHTML(`<h3> ${item.name}  </h3><p> ${item.state}</p>`))
+                        .addTo(this.map);
+                });
+
+            }
+        )
     }
 
     render() {
-        const myArray = [1, 2, 3, 4, 5, 6];
-        console.log(this.state);
+        const { data } = this.state;
         return (
             <Fragment>
                 <HeaderComponent updateEvent={this.updateEvent} />
                 <div >
                     <div ref={this.mapRef} className="absolute top right left bottom" />
                 </div>
-                <div className="content-card">
+                <div className="content-card" key={new Date().getMilliseconds()} >
                     {
-                        myArray.map(
-                            (i: any) => (<CardComponent key={i} />)
+                        data.map(
+                            (i: any) => (<CardComponent listCards={i} key={i.id} />)
                         )
                     }
                 </div>

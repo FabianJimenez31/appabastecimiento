@@ -23,12 +23,12 @@ class Home extends Component<any, stateComponent>{
         {
             title: 'Ver el estado de abastecimiento de un producto',
             img: 'component-2.png',
-            patch: ''
+            patch: '/catering'
         },
         {
             title: 'Reportar Abuso de precio de un producto',
             img: 'component-3.png',
-            patch: ''
+            patch: '/abastecimiento'
         }
     ]
     updateEvent = () => { }

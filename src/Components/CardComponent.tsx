@@ -2,33 +2,38 @@ import { Card, Col, Row, Button } from 'antd';
 import React, { Component } from 'react';
 import './CardComponenet.css';
 import { SmileFilled } from '@ant-design/icons';
+import Item from 'antd/lib/list/Item';
 
+interface propsState {
+    listCards: any;
+}
 
-class CardComponent extends Component {
+class CardComponent extends Component<propsState, any> {
 
 
     render() {
-        const list = [1, 2, 4, 5];
+        const { products, name } = this.props.listCards;
+
         return (
             <Card
                 className='my-card'
                 hoverable
 
             >
-                <div className="card-title">
+                {/*  <div className="card-title">
                     <span>Abierto</span>
-                </div>
+                </div> */}
                 <Row>
                     <Col span={6}>
                         <img
                             className='card-img'
                             alt="example"
-                            src="https://jumbocolombiafood.vteximg.com.br/arquivos/jumbo-logo-preload.png?v=636125778257100000" />
+                            src="https://ciat.cgiar.org/wp-content/uploads/image-not-found.png" />
                     </Col>
                     <Col span={18} style={{ paddingLeft: '20px' }}>
-                        <p>Jumbo 65</p>
-                        <p>Distancia 2km</p>
-                        <p>8AM - 10PM</p>
+                        <p style={{ marginTop: '10px' }}> {name}</p>
+                        {/*  <p>Distancia 2km</p>
+                        <p>8AM - 10PM</p> */}
                     </Col>
 
                 </Row>
@@ -40,26 +45,25 @@ class CardComponent extends Component {
                 </Row>
                 <Row>
                     <p>
-                        <SmileFilled style={{ color: 'green', marginLeft: '1rem' }} />
+                        <SmileFilled style={{ color: 'green', margin: '0px 1rem' }} />
                          vacio
                     </p>
                 </Row>
                 <Row>
                     <ul className='card-prod-detail'>
                         {
-                            list.map((i) => (<li key={i} >
-                                <img
-                                    className='card-detall-img'
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQeXSrKd5dBF6AtdnlbBobGO1BvTkYjYNkErI03cV7Bot4McQdb"
-                                    alt="" />
-                            </li>)
+                            products.map((product: any) => (
+                                <li key={product.id} >
+                                    <img
+                                        className='card-detall-img'
+                                        src="https://ciat.cgiar.org/wp-content/uploads/image-not-found.png"
+                                        alt="" />
+                                    <span style={{marginLeft:'10px'}} >{product.name}</span>
+                                </li>
+                            )
                             )
                         }
                     </ul>
-                </Row>
-
-                <Row>
-                    <Button type='ghost' className='warning-color' size='large' >Reportar Incidencia</Button>
                 </Row>
 
             </Card>

@@ -8,7 +8,7 @@ export class HttpBase {
     alert = new Alert();
     notification = new Notification;
 
-    constructor(private endpoint: string = 'http://192.99.63.194:8000/api/') {
+    constructor(private endpoint: string = 'https://abastecernosapi.humc.co/api/') {
 
         const config: AxiosRequestConfig = {
             baseURL: endpoint,

@@ -4,7 +4,10 @@ import {
   Home,
   Map,
   Store,
-  products
+  priceAbuse,
+  productsAvailability,
+  catering,
+  computerProduct
 } from 'src/Modules';
 export default () => [
   {
@@ -19,6 +22,19 @@ export default () => [
     // eslint-disable-next-line react/display-name
     component: Store
   },
+  
+  {
+    path: '/products/:id',
+    exact: true,
+    // eslint-disable-next-line react/display-name
+    component: productsAvailability
+  },
+  {
+    path: '/catering',
+    exact: true,
+    // eslint-disable-next-line react/display-name
+    component: catering
+  },
   {
     path: '/maps',
     exact: true,
@@ -26,10 +42,21 @@ export default () => [
     component: Map
   },
   {
-    path: '/products/:id',
+    path: '/prince/abuse/:id',
     exact: true,
     // eslint-disable-next-line react/display-name
-    component: products
-  }
-
+    component: priceAbuse
+  },
+  {
+    path: '/reporte/:id/:product',
+    exact: true,
+    // eslint-disable-next-line react/display-name
+    component: computerProduct
+  },
+  {
+    path: '/abastecimiento',
+    exact: true,
+    // eslint-disable-next-line react/display-name
+    component: Store
+  },
 ]

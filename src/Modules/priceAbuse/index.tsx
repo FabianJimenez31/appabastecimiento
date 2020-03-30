@@ -1,24 +1,25 @@
 import React, { Component, Fragment } from 'react';
 import { HeaderComponent } from 'src/Components';
 import { Col, Row, Form, Input, Button, Avatar, Radio } from 'antd';
-import { SearchOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 
 import { StoreService } from 'src/Modules/services';
 
 
 
-class Products extends Component<any, any> {
+class PrinceAbuse extends Component<any, any> {
   state = {
     list: [],
     products: [],
-    reporte: []
+    reporte: [],
+    id: 0
   }
 
   componentDidMount() {
     const id = this.props.match.params.id;
     StoreService.getProductStore(id).then((res: any) => {
       const { products } = res;
-      this.setState({ list: products, products })
+      this.setState({ list: products, products, id })
     });
   }
 
@@ -96,16 +97,24 @@ class Products extends Component<any, any> {
     });
   }
 
+  hambler = (id: any) => {
+    console.log('click', id);
+    this.props.history.push(`/reporte/${this.state.id}/${id}/`);
+  }
+
   render() {
 
-    const { list, reporte } = this.state;
+    const { reporte, list } = this.state;
+    //const list: Array<any> = [];
     return (
       <Fragment>
         <Col span={24}>
           <HeaderComponent updateEvent={() => { }} />
         </Col>
         <Col span={24}>
-          <h2 style={{ textAlign: 'center', margin: '2%' }} >¿Quizas sea alguno de estos productos?</h2>
+          <h2 style={{ textAlign: 'center', margin: '2%' }} >
+            Productos Reportados en su tienda o supermercado
+          </h2>
         </Col>
         <Row style={{ padding: '10px' }}>
           <Col span={24}>
@@ -122,16 +131,9 @@ class Products extends Component<any, any> {
             {
               list.map((item: any) => {
 
-                let count = 0;
-                reporte.forEach((i: any) => {
-                  if (i.id === item.id) {
-                    console.log(i.count);
-                    count = i.count;
-                  }
-                });
-
+               
                 return (
-                  <Row key={item.id}>
+                  <Row key={item.id} onClick={() => this.hambler(item.id)} style={{marginBottom:'12px'}}>
                     <Col span={24}>
                       <Row>
                         <Col span={5} style={{ marginBottom: '5px' }}>
@@ -140,32 +142,12 @@ class Products extends Component<any, any> {
                         <Col span={17}>
                           <h2 style={{ marginBottom: 0 }}>{item.name}</h2>
                           <span>{item.prince}</span>
+                          <span style={{color:'#a9a4a4'}}>Actualizar Precio</span>
                         </Col>
-                        <Col span={2}>
-                          <Radio value={item.id} />
-                        </Col>
+              
                       </Row>
                     </Col>
-                    <Col span={24}>
-                      <Row>
-                        <Col span={14} offset={5} >
-                          <span>Añadir Cantidad</span>
-                        </Col>
-                        <Col span={5}  >
-                          <MinusOutlined
-                            onClick={() => { this.hamblerDecrement(item.id) }}
-                            data-id={item.id}
-                            style={{ border: '1px solid #F8B500', color: '#F8B500', borderRadius: '2px' }} />
-                          <span style={{ color: '#F8B500', fontWeight: 900, padding: '0 8px' }}>
-                            {count}
-                          </span>
-                          <PlusOutlined
-                            onClick={() => { this.hamblerIncrement(item.id) }}
-                            data-id={item.id}
-                            style={{ border: '1px solid #F8B500', color: '#F8B500', borderRadius: '2px' }} />
-                        </Col>
-                      </Row>
-                    </Col>
+                   
                   </Row>
                 );
               })
@@ -178,4 +160,4 @@ class Products extends Component<any, any> {
   }
 }
 
-export default Products
+export default PrinceAbuse

@@ -25,12 +25,8 @@ class HeaderComponent extends Component<stateProps, stateComponent> {
     componentDidMount() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-                console.log(position);
-                //const url = `http://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&sensor=false`
-
-                var img = new Image();
-                img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + position.coords.latitude + "," + position.coords.longitude + "&zoom=13&size=800x400&sensor=false";
-                this.setState({
+               
+               this.setState({
                     position: `${position.coords.latitude},${position.coords.longitude}`,
                     lng: position.coords.longitude,
                     lat: position.coords.latitude,
@@ -86,9 +82,9 @@ class HeaderComponent extends Component<stateProps, stateComponent> {
                             />
                         </Link>
                     </Col>
-                    <Col sm={12}>
+                   {/*  <Col sm={12}>
                         <Input placeholder="Enecuentra lo que necesitas"></Input>
-                    </Col>
+                    </Col> */}
                 </Row>
             </Fragment>
         );
