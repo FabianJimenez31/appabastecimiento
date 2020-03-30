@@ -122,6 +122,7 @@ class StoreList(APIView):
         name = None
         latitude = None
         longitude = None
+        products = models.product.objects.all()
 
         try:
             name = request.data['name']
@@ -136,6 +137,17 @@ class StoreList(APIView):
             longitude=longitude)
         
         store_object.save()
+
+        for product in products:
+            store_product_object = models.store_product(
+                store_id=store_object.id,
+                product_id = product.id,
+                amount=0
+
+
+            )
+
+            store_product_object.save()
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -199,6 +211,7 @@ class StoreListbyQuery(APIView):
     def post(self, request, format=None):
         name = None
         stores = None
+        
 
         try:
             name = request.data['name']
