@@ -137,17 +137,9 @@ class StoreList(APIView):
             longitude=longitude)
         
         store_object.save()
+        store_object.products.add(*products)
 
-        for product in products:
-            store_product_object = models.store_product(
-                store_id=store_object.id,
-                product_id = product.id,
-                amount=0
-
-
-            )
-
-            store_product_object.save()
+        store_object.save()
 
         return Response(status=status.HTTP_201_CREATED)
 
