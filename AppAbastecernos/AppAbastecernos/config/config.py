@@ -1,4 +1,5 @@
 import os
+from AppAbastecernos.util.media_support import MediaSupport
 
 class Config:
 
@@ -14,6 +15,8 @@ class Config:
         self.migration_stores = os.getenv("MIGRATION_STORES")
         self.media_url = os.getenv("MEDIA_URL")
         self.media_root = os.getenv("MEDIA_ROOT")
+        media_support = MediaSupport(self.media_root)
+        media_support.create_folder_media()
 
     
     def get_connectiondb(self):
