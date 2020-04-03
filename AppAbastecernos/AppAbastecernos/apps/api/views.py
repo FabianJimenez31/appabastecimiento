@@ -270,7 +270,7 @@ class StoreReportList(APIView):
         store_report_object = models.store_report(
                     store=store_object,
                     description=description,
-                    ip=ip_load.get_ip(request)
+                    ip_client=ip_load.get_ip(request)
                     )
         store_report_object.save()
         if(
