@@ -14,6 +14,8 @@ class store(models.Model):
     address = models.CharField(max_length=100)
     latitude = models.FloatField()
     longitude = models.FloatField()
+
+
     products = models.ManyToManyField(product, through='store_product')
     def __str__(self):
         return self.name
@@ -24,7 +26,7 @@ class store_status(models.Model):
         return self.name
 
 class store_report(models.Model):
-    photo = models.TextField()
+    photo = models.TextField(null=True)
     description = models.TextField()
     store = models.ForeignKey(store, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)

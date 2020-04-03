@@ -98,7 +98,11 @@ def migration_stores(request):
 class StoreList(APIView):
 
     parser_classes = (JSONParser,)
+    @swagger_auto_schema(
+        responses={200:openapi.Response('Store',StoreSerializer)},
+        tags=['Store']
 
+    )
     def get(self, request, format=None):
         stores = models.store.objects.all()
         serializer = StoreSerializer(stores, many=True)
@@ -228,10 +232,10 @@ class StoreReportList(APIView):
         operation_description="Create Report Store Description",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['status_id','status_id','photo'],
+            required=['store_id','description','photo'],
             properties={
-                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
-                'status_id': openapi.Schema(type=openapi.TYPE_STRING),
+                'store_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'description': openapi.Schema(type=openapi.TYPE_STRING),
                 'photo': openapi.Schema(type=openapi.TYPE_FILE),
 
             },
@@ -240,11 +244,11 @@ class StoreReportList(APIView):
     )
     def post(self,request,format=None):
         store_id = None
-        store_status_id = None
+        description = None
         photo = None
         try:
             store_id = request.data['store_id']
-            store_status_id = request.data['status_id']
+            description = request.data['description']
             
 
         except:
@@ -255,17 +259,17 @@ class StoreReportList(APIView):
         else:
             photo = ''
         store_object = None
-        status_object = None
+        
 
         try:
             store_object = self.get_object(store_id)
-            status_object = models.store_status.objects.get(pk=store_status_id)
+            
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         store_report_object = models.store_report(
                     store=store_object,
-                    store_status=status_object,
+                    description=description,
                     ip=ip_load.get_ip(request)
                     )
         store_report_object.save()
@@ -370,6 +374,42 @@ class ProductReportList(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
+
+class StoreRaitingList(APIView):
+    parser_classes = (JSONParser,)
+    @swagger_auto_schema(
+        responses={201:''},
+        operation_description="Create raiting",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['store_id','raiting',],
+            properties={
+                'store_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'raiting': openapi.Schema(type=openapi.TYPE_INTEGER)
+                
+            
+
+            },
+        ),
+        
+    )
+    def post(self, request, format=None):
+        raiting = None  
+        store_id = None 
+
+        try:
+            raiting = int(request.data['raiting'])
+            store_id = request.data['store_id']
+            store_raiting = models.store_raiting(raiting=raiting,store_id=store_id)
+            store_raiting.save()
+        except:
+            Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(status=status.HTTP_201_CREATED)
+
+
+
+
 class StoreStockProductList(APIView):
     parser_classes = (JSONParser,)
     @swagger_auto_schema(
@@ -423,8 +463,8 @@ class StoreByGeoPointList(APIView):
         responses={200:StoreSerializer(many=True)},
         tags=['Stores']
     )
-    def get(self, request,latitude,longitude,format=None):
-        geo_point = GeoPoint()
+    def get(self, request,latitude,longitude, radio=2, format=None):
+        geo_point = GeoPoint(radio)
         latitude = float(latitude)
         longitude = float(longitude)
         latitude_min = float(latitude-geo_point.get_haversine_latitude())

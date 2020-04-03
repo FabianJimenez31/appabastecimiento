@@ -1,8 +1,8 @@
 import math
 
 class GeoPoint:
-    def __init__(self):
-        self.radius = 2
+    def __init__(self, radio):
+        self.radius = radio
 
     def get_haversine_longitude(self,latitude):
         return float(self.radius / abs(math.cos(math.radians(latitude)) * 69))

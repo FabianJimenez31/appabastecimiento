@@ -1,10 +1,13 @@
+from django.db.models import  Avg
 from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
 from .models import (
     store, 
     product, 
     store_status,
-    units
+    units,
+    store_report,
+    store_raiting
 )
 
 
@@ -14,6 +17,12 @@ class ProductSerializer(serializers.ModelSerializer):
         model = product
         fields = ('id','name', 'description','icon')
 
+class StoreRaiting(serializers.ModelSerializer):
+
+    class Meta:
+        model = store_raiting
+        fields = ('id','raiting')
+
 class StoreStatusSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -21,12 +30,17 @@ class StoreStatusSerializer(serializers.ModelSerializer):
         fields = ('id','name')
 
 
+class StoreReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = store_report
+        fields = ('id','photo','description','created_on')
 
 
 class StoreSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True, read_only=True)
-    #reports = serializers.SerializerMethodField('get_reports')
-    state = serializers.SerializerMethodField('get_state')
+    #products = ProductSerializer(many=True, read_only=True)
+    reports = serializers.SerializerMethodField('get_reports')
+    #5state = serializers.SerializerMethodField('get_state')
+    raiting = serializers.SerializerMethodField('get_raiting')
     class Meta:
         model = store
         
@@ -35,16 +49,25 @@ class StoreSerializer(serializers.ModelSerializer):
             'name',
             'latitude',
             'longitude',
-            'products',
-            'state')
+             'raiting',
+            'reports'
+            )
 
-        """
+        
     @swagger_serializer_method(serializer_or_field=StoreReportSerializer(many=True))
     def get_reports(self,obj):
-        stores = store_report.objects.filter(store_id=obj.id)
-        return StoreReportSerializer(stores, many=True).data
-        """
-    
+        stores_reports = store_report.objects.filter(store_id=obj.id)
+        return StoreReportSerializer(stores_reports, many=True).data
+    @swagger_serializer_method(serializer_or_field=serializers.IntegerField)
+    def get_raiting(self,obj):
+        raiting_dict = store_raiting.objects.filter(store_id=obj.id).aggregate(Avg('raiting'))
+        if raiting_dict['raiting__avg']:
+            raiting_result = int(raiting_dict['raiting__avg'])
+            return raiting_result
+        else:
+            return 0
+
+
     def get_state(self,obj):
         state = calculateJam(obj)
         return str(state)
@@ -55,6 +78,7 @@ class UnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = units
         fields =('id', 'name', 'short_name')
+
 
 
 def calculateJam(sto):
