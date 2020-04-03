@@ -24,11 +24,17 @@ class store_status(models.Model):
         return self.name
 
 class store_report(models.Model):
+    photo = models.TextField()
+    description = models.TextField()
     store = models.ForeignKey(store, on_delete=models.CASCADE)
-    store_status = models.ForeignKey(store_status, on_delete=models.CASCADE)
-    time = models.DateTimeField(default=timezone.now)
-    photo = models.CharField(max_length=200, blank=True, default='')
-    ip = models.CharField(max_length=20)
+    created_on = models.DateTimeField(auto_now_add=True)
+    ip_client = models.CharField(max_length=255, null=True)
+
+class store_raiting(models.Model):
+    store = models.ForeignKey(store, on_delete=models.CASCADE)
+    raiting = models.IntegerField()
+    ip_client = models.CharField(max_length=255, null=True)
+
 
 class units(models.Model):
     name = models.CharField(max_length=100)

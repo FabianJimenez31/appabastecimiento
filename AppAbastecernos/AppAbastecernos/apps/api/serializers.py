@@ -3,7 +3,6 @@ from drf_yasg.utils import swagger_serializer_method
 from .models import (
     store, 
     product, 
-    store_report, 
     store_status,
     units
 )
@@ -22,16 +21,11 @@ class StoreStatusSerializer(serializers.ModelSerializer):
         fields = ('id','name')
 
 
-class StoreReportSerializer(serializers.ModelSerializer):
-    store_status = StoreStatusSerializer(read_only=True)
-    class Meta:
 
-        model = store_report
-        fields = ('time', 'photo','store_status')
 
 class StoreSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
-    reports = serializers.SerializerMethodField('get_reports')
+    #reports = serializers.SerializerMethodField('get_reports')
     state = serializers.SerializerMethodField('get_state')
     class Meta:
         model = store
@@ -42,14 +36,14 @@ class StoreSerializer(serializers.ModelSerializer):
             'latitude',
             'longitude',
             'products',
-            'reports', 
             'state')
 
-        
+        """
     @swagger_serializer_method(serializer_or_field=StoreReportSerializer(many=True))
     def get_reports(self,obj):
         stores = store_report.objects.filter(store_id=obj.id)
         return StoreReportSerializer(stores, many=True).data
+        """
     
     def get_state(self,obj):
         state = calculateJam(obj)
