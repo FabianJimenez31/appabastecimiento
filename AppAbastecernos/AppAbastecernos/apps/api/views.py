@@ -8,7 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import MultiPartParser,FormParser,JSONParser
 from .serializers import (
     StoreSerializer,
     StoreStatusSerializer,
@@ -220,6 +220,8 @@ class StoreListbyQuery(APIView):
 
 
 class StoreReportList(APIView):
+
+    #parser_classes = (MultiPartParser,FormParser,JSONParser,)
     
     def get_object(self,pk):
         try:
@@ -243,29 +245,31 @@ class StoreReportList(APIView):
         
     )
     def post(self,request,format=None):
+        
         store_id = None
         description = None
         photo = None
-        try:
-            store_id = request.data['store_id']
-            description = request.data['description']
-            
+        
+        store_id = request.data['store_id']
+        description = request.data['description']
+        
 
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+       
 
-        if 'photo' in request.FILES:
-            photo = request.FILES['photo']
+        if 'photo' in request.FILES.get('photo'):
+            photo = request.FILES.get('photo')
         else:
             photo = ''
+
+        
         store_object = None
         
 
-        try:
-            store_object = self.get_object(store_id)
+     
+        store_object = self.get_object(store_id)
             
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+       
+            
 
         store_report_object = models.store_report(
                     store=store_object,
