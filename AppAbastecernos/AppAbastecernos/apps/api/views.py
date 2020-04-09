@@ -256,7 +256,8 @@ class StoreReportList(APIView):
 
        
 
-        if 'photo' in request.FILES.get('photo'):
+        if 'photo' in request.FILES:
+           
             photo = request.FILES.get('photo')
         else:
             photo = ''
