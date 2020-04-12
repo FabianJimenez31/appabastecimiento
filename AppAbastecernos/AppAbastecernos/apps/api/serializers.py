@@ -31,11 +31,17 @@ class StoreStatusSerializer(serializers.ModelSerializer):
 
 
 class StoreReportSerializer(serializers.ModelSerializer):
+    time = serializers.SerializerMethodField('get_time')
+    date = serializers.SerializerMethodField('get_date')
     class Meta:
         model = store_report
-        fields = ('id','photo','description','created_on')
+        fields = ('id','photo','description','created_on','time',"date")
 
+    def get_time(self, obj):
+        return f"{obj.created_on.hour}:{obj.created_on.minute}:{obj.created_on.second}"
 
+    def get_date(self, obj):
+        return f"{obj.created_on.year}-{obj.created_on.month}-{obj.created_on.day}"      
 class StoreSerializer(serializers.ModelSerializer):
     #products = ProductSerializer(many=True, read_only=True)
     reports = serializers.SerializerMethodField('get_reports')
