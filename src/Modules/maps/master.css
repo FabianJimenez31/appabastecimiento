@@ -1,5 +1,5 @@
 .mapboxgl-map{
-    height: 82vh;
+    height: 100vh;
     width: 100vw;
     background-repeat: space;
 }
@@ -18,4 +18,16 @@
     background-color: transparent !important;
     position: absolute;
     bottom: 0px;
+}
+.icon-calificacion{
+    font-size: 32px;
+}
+.active-calificacion{
+    color:rgb(243, 243, 13);
+}
+
+.img-detail{
+    position: relative;
+    width: 100%;
+    margin-right: 12px;
 }
